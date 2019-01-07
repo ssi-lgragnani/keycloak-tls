@@ -2,10 +2,38 @@ http://www.piotrnowicki.com/java/2017/01/09/keycloak-docker-with-ssl-proxy/
 https://github.com/Codingpedia/codingmarks-api/wiki/Keycloak-Setup-for-Production
 
 # keycloak-tls
-docker compose + nginx + keycloak + postgrse
+docker compose + nginx + keycloak + postgres
 
 
-1. install docker
+Notes:
+- All relative paths (in this README) will be given relative the GitHub project directory. (e.g. ~/keycloak-tls)
+- This repo is tested Ubuntu 18 running on Amazon EC2. Other distros may need some modification.
+
+
+System Requirements / Environment setup;
+1. The following ports must be exposed:
+- 80
+- 443
+- 8080
+- 8443
+
+2. in your domain registrar, create two A records:
+- yourdomain.com -> your public ip
+- www.yourdomain.com -> your public ip
+
+
+installation steps:
+1. clone this repository.
+    cd ~
+    git clone https://github.com/ssi-lgragnani/keycloak-tls.git
+    cd keycloak-tls
+2. install docker
+    google it
+3. install docker-compose
+    google it
+4. install certbot
+    google it
+
 
 2. docker volume create letsencrypt_certificates
 
@@ -30,6 +58,9 @@ ln -s live/keycloak.syntelli.com/privkey.pem tls.key
 chown 1000:root tls.crt
 chown 1000:root tls.key
 
+
+###########
+ignore everything below this line.
 openssl pkcs12 -export -name server-cert -in tls.crt -inkey tls.key -out serverkeystore.p12
 # (press enter twice to leave password blank)
 chown ubuntu:root serverkeystore.p12

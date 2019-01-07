@@ -1,3 +1,0 @@
-FROM blacklabelops/nginx
-ADD volumes/nginx_volume/server1.conf /etc/nginx/conf.d/server1.conf
-ADD volumes/nginx_volume/server1/reverseProxy.conf /etc/nginx/conf.d/server1/reverseProxy.conf
