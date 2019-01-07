@@ -1,7 +1,8 @@
 .idea
-!.gitkeep
+#!.gitkeep
 volumes/nginx_volume/*
 volumes/keycloak_volume/*
 volumes/keycloak_postgresql_volume/*
 volumes/letsencrypt_challenges/*
 volumes/letsencrypt_certificates/*
+!.gitkeep
