@@ -30,10 +30,10 @@ services:
         - POSTGRES_PORT_5432_TCP_ADDR=postgres
         - POSTGRES_PORT_5432_TCP_PORT=5432
       ports:
-        - "80:80"
-        - "443:443"
-#        - "8080:8080"
-#        - "8443:8443"
+#        - "80:80"
+#        - "443:443"
+        - "8080:8080"
+        - "8443:8443"
       volumes:
         - ./volumes/keycloak_volume:/data
         #- ./home/ubuntu/cognitive.syntelli.com:/etc/x509/https
