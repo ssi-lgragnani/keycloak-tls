@@ -1,28 +1,41 @@
-http://www.piotrnowicki.com/java/2017/01/09/keycloak-docker-with-ssl-proxy/
-https://github.com/Codingpedia/codingmarks-api/wiki/Keycloak-Setup-for-Production
-
 # keycloak-tls
-docker compose + letsencrypt SSL + keycloak + postgres
+HTTPS-secured Keycloak server using certificates signed by a 3rd party CA.
 
+## Background
+I wanted to start using Keycloak in production. This meant two things:
+- HTTPS, not the default HTTP.
+- 3rd party CA certificates, not the default self-signed certificates.
+
+I wrote this repository because Keycloak's documentation is bad (and no one else has written a complete example, either.)
+
+## By the end of this document, you will have
+- free SSL certificates (using Let's Encrypt)
+- Keycloak running over HTTPS (without needing a reverse proxy.)
+
+## Limitations of this repo (things I haven't yet figured out)
+- no support for reverse proxying.
+- no support for custom port numbers.
 
 ## Notes:
 - All relative paths (in this README) will be given relative the GitHub project directory. (e.g. ~/keycloak-tls)
-- This repo is tested Ubuntu 18 running on Amazon EC2. Other distros may need some modification.
-
+- This repo has been tested in an Ubuntu 18 environment, running on Amazon EC2. Other distros may need some modification.
 
 # System Requirements
 ## 1. The following ports must be exposed:
-- 8080
-- 8443
+- 80 (for certbot)
+- 443 (for certbot)
+- 8080 (for keycloak)
+- 8443 (for keycloak)
 
-## 2. in your domain registrar, create two A records:
+## 2. Register a domain name to your server's public IP.
+Create a DNS A record as follows:
 - yourdomain.com -> your public ip
 - www.yourdomain.com -> your public ip
 
-## 3. Install the following programs.
-- docker
-- docker-compose
-- certbot
+## 3. Install the following programs
+The following must be installed.
+- docker (https://www.digitalocean.com/community/tutorials/how-to-install-and-use-docker-on-ubuntu-18-04)
+- docker-compose (https://docs.docker.com/compose/install/)
 
 # Installation
 ## Set up SSL
@@ -122,3 +135,11 @@ Run the following to view logs:
 ```docker-compose logs keycloak```
 
 Note that the Keycloak container takes about 30-40 seconds to spin up.
+
+
+
+### References
+
+1 http://www.piotrnowicki.com/java/2017/01/09/keycloak-docker-with-ssl-proxy/
+
+2 https://github.com/Codingpedia/codingmarks-api/wiki/Keycloak-Setup-for-Production
