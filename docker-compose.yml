@@ -8,7 +8,7 @@ services:
         - '443:443'
         - '80:80'
       volumes:
-        - volumes/nginx_volume:/home/nginx
+        - ./volumes/nginx_volume:/home/nginx
         - /etc/letsencrypt:/etc/letsencrypt
         #- letsencrypt_challenges:/var/www/letsencrypt
       environment:
@@ -35,7 +35,7 @@ services:
           - POSTGRES_PASSWORD=keycloak
           - POSTGRES_ROOT_PASSWORD=keycloak
       volumes:
-        - volumes/keycloak_postgresql_volume:/var/lib/postgresql/data
+        - ./volumes/keycloak_postgresql_volume:/var/lib/postgresql/data
       restart: unless-stopped
   keycloak:
       image: jboss/keycloak
@@ -56,7 +56,7 @@ services:
       ports:
         - "18080:8080"
       volumes:
-        - volumes/keycloak_volume:/data
+        - ./volumes/keycloak_volume:/data
       restart: unless-stopped
 
 #volumes:
