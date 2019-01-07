@@ -19,7 +19,6 @@ services:
       image: jboss/keycloak
       container_name: keycloak
       hostname: keycloak
-      restart: unless-stopped
       environment:
       - KEYCLOAK_USER=admin
         - KEYCLOAK_PASSWORD=admin
@@ -39,7 +38,7 @@ services:
         - ./volumes/keycloak_volume:/data
         #- ./home/ubuntu/cognitive.syntelli.com:/etc/x509/https
         - letsencrypt_certificates:/etc/x509/https
-      restart: unless-stopped
+      #restart: unless-stopped
 
 volumes:
 #  nginx_volume:
