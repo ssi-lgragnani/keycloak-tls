@@ -54,13 +54,14 @@ services:
         - DB_PASSWORD=keycloak
         - POSTGRES_PORT_5432_TCP_ADDR=postgres
         - POSTGRES_PORT_5432_TCP_PORT=5432
-        - PROXY_ADDRESS_FORWARDING=true
+        #- PROXY_ADDRESS_FORWARDING=true
         - KEYCLOAK_USER=admin
         - KEYCLOAK_PASSWORD=admin
 #      links:
 #        - keycloak_postgres:postgres
       ports:
         - "8080:8080"
+        - "8443:8443"
       volumes:
         - ./volumes/keycloak_volume:/data
         #- ./home/ubuntu/cognitive.syntelli.com:/etc/x509/https
