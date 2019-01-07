@@ -1,9 +1,10 @@
 .idea
 #!.gitkeep
-volumes/nginx_volume/*
+volumes/nginx_volume/*.pem
 volumes/keycloak_volume/*
 volumes/keycloak_postgresql_volume/*
 volumes/letsencrypt_challenges/*
 volumes/letsencrypt_certificates/*
 !.gitkeep
-!server1.conf
+#!server1.conf
+#!volumes/server1/reverseProxy.conf
