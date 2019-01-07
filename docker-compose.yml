@@ -2,7 +2,8 @@ version: "2"
 
 services:
   nginx:
-      image: blacklabelops/nginx
+      #image: blacklabelops/nginx
+      build: Dockerfile-nginx
       container_name: nginx_server
       ports:
         - '443:443'

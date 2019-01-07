@@ -1,0 +1,2 @@
+FROM blacklabelops/nginx
+ADD volumes/nginx_volume/server1.conf /etc/nginx/conf.d/server1.conf
