@@ -6,3 +6,4 @@ volumes/keycloak_postgresql_volume/*
 volumes/letsencrypt_challenges/*
 volumes/letsencrypt_certificates/*
 !.gitkeep
+!server1.conf
