@@ -41,7 +41,10 @@ services:
         - keycloak_postgresql_volume:/var/lib/postgresql/data
       restart: unless-stopped
   keycloak:
-      image: jboss/keycloak
+      #image: jboss/keycloak
+      build:
+        context: .
+        dockerfile: Dockerfile-keycloak
       container_name: keycloak_server
       hostname: keycloak
       restart: unless-stopped
