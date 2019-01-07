@@ -35,7 +35,7 @@ services:
           - POSTGRES_PASSWORD=keycloak
           - POSTGRES_ROOT_PASSWORD=keycloak
       volumes:
-        - keycloak_postgresql_volume:/var/lib/postgresql/data
+        - volumes/keycloak_postgresql_volume:/var/lib/postgresql/data
       restart: unless-stopped
   keycloak:
       image: jboss/keycloak
@@ -56,16 +56,16 @@ services:
       ports:
         - "18080:8080"
       volumes:
-        - keycloak_volume:/data
+        - volumes/keycloak_volume:/data
       restart: unless-stopped
 
-volumes:
+#volumes:
 #  nginx_volume:
 #    external: true
-  keycloak_volume:
-    external: true
-  keycloak_postgresql_volume:
-    external: true
+#  keycloak_volume:
+#    external: true
+#  keycloak_postgresql_volume:
+#    external: true
 #  letsencrypt_certificates:
 #    external: true
 #  letsencrypt_challenges:
