@@ -27,7 +27,10 @@ docker compose + nginx + keycloak + postgres
 # Installation
 ## Set up SSL
 First we need to create a Docker volume. This will act as shared storage between our Docker containers.
-```docker volume create letsencrypt_certificates```
+```
+docker volume create letsencrypt_certificates
+docker volume create keycloak_postgresql_volume
+```
 
 Next we'll use Docker to geenrate our SSL certificates.
 In the following code, replace "keycloak.syntelli.com" with the DNS Alias you configured earlier.
@@ -57,60 +60,65 @@ chown 1000:root tls.key
 ```
 
 > If you're curious what that just did:
-> Unfortunately, Keycloak likes to self-sign certificates (which are fairly worthless as far as TLS goes.)
-> Fortunately, the Keycloak Docker image can use certificates signed by external CA's (like Let's Encrypt.)
-> Unforunately, Keycloak hard-codes the expected filenames (they must be "tls.crt" and "tls.key") and these files aren't provided automagically by Let's Encrypt or the Black Label Ops docker image.
-> Fortunately, we can create our own symbolic links (and change the user permissions) because our Docker volume is just a directory living on the Docker host's filesystem.
+```
+Let's Encrypt provided us with free SSL certificates, which go into our Docker volume.
 
+Unfortunately, Keycloak defaults to self-signed certificates (which are verboten in production.)
 
+Fortunately, JBoss's official Keycloak Docker image supports external CA's (aka Let's Encrypt.)
 
-> The Keycloak image expects two files (tls.crt and tls.key)
-> Letsyncrypt provides a bunch of symlinks owned by root.
-> We also need to ensure the "jboss" user (id 1000) will have access to the files.
-sudo su -
-cd /var/lib/docker/volumes/letsencrypt_certificates/_data
-chown 1000:root archive
-chown 1000:root live
-ln -s live/keycloak.syntelli.com/cert.pem tls.crt
-ln -s live/keycloak.syntelli.com/privkey.pem tls.key
-chown 1000:root tls.crt
-chown 1000:root tls.key
+Unforunately, the expected filenames ("tls.crt" and "tls.key") are hardcoded.
+The expected filepath is ALSO hardcoded ("/etc/x509/https" directory.)
+Finally, the files need to be readable by user "jboss" (ID 1000.)
 
+So we need to provide these hard-coded expectations manually, by editing our Docker volume.
+Fortunately, the volume is stored as a directory in the host OS (because we used an external Docker volume.)
 
-###########
-ignore everything below this line.
-openssl pkcs12 -export -name server-cert -in tls.crt -inkey tls.key -out serverkeystore.p12
-# (press enter twice to leave password blank)
-chown ubuntu:root serverkeystore.p12
-exit
+So the above code does the following things:
+1. We change directory into the path (which we know from `docker volume inspect letsencrypt_certificates`.)
+2. We then create the "tls.crt" and "tls.key" files as symbolic links.
+3. Finally, we modifiy the ownership of the files.
 
+That's it--this is everything needed to import the external CA certificate into the keystore.
+(special thanks to: https://developer.jboss.org/thread/278360?_sscc=t for the ultimate answer.)
+```
 
-#########################
-setup the keystore
-docker-compose exec keycloak bash
-cd /etc/x509/https
-keytool -importkeystore -destkeystore ~/keycloak.jks -srckeystore serverkeystore.p12 -srcstoretype pkcs12 -alias server-cert
+## Change the usernames and passwords:
+The keycloak admin console defaults to "admin/admin".
 
-#########################
+The postgres database user defaults to "keycloak/keycloak".
 
-[ references ]
-Nell Medina (for a blog post with incomplete instructions.)
-- https://nellmedina.github.io/install-keycloak-with-docker/
+To change these, edit the `docker-compose.yml` file's environment variables:
+```
+postgres:
+    ....
+    environment:
+          - POSTGRES_DB=keycloak
+          - POSTGRES_USER=keycloak
+          - POSTGRES_PASSWORD=keycloak
+          - POSTGRES_ROOT_PASSWORD=keycloak
+    ...
+keycloak:
+    ...
+    environment:
+        - KEYCLOAK_USER=admin
+        - KEYCLOAK_PASSWORD=admin
+        - DB_DATABASE=keycloak
+        - DB_USER=keycloak
+        - DB_PASSWORD=keycloak
+    ...
+```
 
-1. install docker & docker-compose
-2. create volumes:
-docker volume create keycloak_postgresql_volume
+## Change the listening ports:
+I have no idea how to do this. If you figure it out, let me know.
 
-###
+## Deploy the server
+Run the following to deploy any changes to the 'docker-compose.yml' file:
 
-1. create a DNS record for the local server
-we'll be using "keycloak.syntelli.com"
+```git pull && docker-compose build && docker-compose down && docker-compose up -d```
 
-2. install certbot and use it
-sudo certbot certonly --standalone -d keycloak.syntelli.com -d www.keycloak.syntelli.com
+Run the following to view logs:
 
-3. wip
+```docker-compose logs keycloak```
 
-3. symlink the letsencrpyt to the volume
-cd volumes/letsencrypt_certificates
-ln /etc/letsencrypt/live/keycloak.syntelli.com keycloak.syntelli.com
+Note that the Keycloak container takes about 30-40 seconds to spin up.
