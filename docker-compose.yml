@@ -23,9 +23,9 @@ services:
         - 'SERVER1CERTIFICATE_TRUSTED=/etc/letsencrypt/live/keycloak.syntelli.com/fullchain.pem'
         - 'SERVER1PROXY_APPLICATION=keycloak'
       restart: unless-stopped
-  keycloak_postgres:
+  postgres:
       image: postgres:latest
-      container_name: keycloak_postgres
+      container_name: postgres
       restart: unless-stopped
       ports:
           - "15432:15432"
@@ -35,7 +35,7 @@ services:
           - POSTGRES_PASSWORD=keycloak
           - POSTGRES_ROOT_PASSWORD=keycloak
       volumes:
-        - ./volumes/keycloak_postgresql_volume:/var/lib/postgresql/data
+        - keycloak_postgresql_volume:/var/lib/postgresql/data
       restart: unless-stopped
   keycloak:
       image: jboss/keycloak
@@ -51,21 +51,21 @@ services:
         - KEYCLOAK_PASSWORD=admin
         - POSTGRES_PORT_5432_TCP_ADDR=postgres
         - POSTGRES_PORT_5432_TCP_PORT=5432
-      links:
-        - keycloak_postgres:postgres
+#      links:
+#        - keycloak_postgres:postgres
       ports:
         - "18080:8080"
       volumes:
         - ./volumes/keycloak_volume:/data
       restart: unless-stopped
 
-#volumes:
+volumes:
 #  nginx_volume:
 #    external: true
 #  keycloak_volume:
 #    external: true
-#  keycloak_postgresql_volume:
-#    external: true
+  keycloak_postgresql_volume:
+    external: true
 #  letsencrypt_certificates:
 #    external: true
 #  letsencrypt_challenges:

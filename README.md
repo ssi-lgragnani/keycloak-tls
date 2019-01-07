@@ -6,6 +6,11 @@ docker compose + nginx + keycloak + postgrse
 Nell Medina (for a blog post with incomplete instructions.)
 - https://nellmedina.github.io/install-keycloak-with-docker/
 
+1. install docker & docker-compose
+2. create volumes:
+docker volume create keycloak_postgresql_volume
+
+###
 
 1. create a DNS record for the local server
 we'll be using "keycloak.syntelli.com"
