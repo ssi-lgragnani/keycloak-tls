@@ -1,4 +1,4 @@
-version: "2"
+version: "3.2"
 
 services:
   nginx:
@@ -9,8 +9,8 @@ services:
         - '80:80'
       volumes:
         - nginx_volume:/home/nginx
-        - letsencrypt_certificates:/etc/letsencrypt
-        - letsencrypt_challenges:/var/www/letsencrypt
+        - /etc/letsencrypt:/etc/letsencrypt
+        #- letsencrypt_challenges:/var/www/letsencrypt
       environment:
         - 'SERVER1SERVER_NAME=keycloak.nellmedina.com'
         - 'SERVER1REVERSE_PROXY_LOCATION1=/'
@@ -66,8 +66,8 @@ volumes:
     external: true
   keycloak_postgresql_volume:
     external: true
-  letsencrypt_certificates:
-    external: true
-  letsencrypt_challenges:
-    external: true
+#  letsencrypt_certificates:
+#    external: true
+#  letsencrypt_challenges:
+#    external: true
 

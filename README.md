@@ -17,4 +17,4 @@ sudo certbot certonly --standalone -d keycloak.syntelli.com -d www.keycloak.synt
 
 3. symlink the letsencrpyt to the volume
 cd volumes/letsencrypt_certificates
-ln /etc/letsencrypt/live/keycloak.syntelli.com mydomain
+ln /etc/letsencrypt/live/keycloak.syntelli.com keycloak.syntelli.com
