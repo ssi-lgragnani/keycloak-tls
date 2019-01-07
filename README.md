@@ -5,39 +5,32 @@ https://github.com/Codingpedia/codingmarks-api/wiki/Keycloak-Setup-for-Productio
 docker compose + nginx + keycloak + postgres
 
 
-Notes:
+## Notes:
 - All relative paths (in this README) will be given relative the GitHub project directory. (e.g. ~/keycloak-tls)
 - This repo is tested Ubuntu 18 running on Amazon EC2. Other distros may need some modification.
 
 
-System Requirements / Environment setup;
-1. The following ports must be exposed:
+# System Requirements
+## 1. The following ports must be exposed:
 - 80
 - 443
 - 8080
 - 8443
 
-2. in your domain registrar, create two A records:
+## 2. in your domain registrar, create two A records:
 - yourdomain.com -> your public ip
 - www.yourdomain.com -> your public ip
 
+## 3. Install the following programs.
+- docker
+- docker-compose
+- certbot
 
-installation steps:
-1. clone this repository.
-    cd ~
-    git clone https://github.com/ssi-lgragnani/keycloak-tls.git
-    cd keycloak-tls
-2. install docker
-    google it
-3. install docker-compose
-    google it
-4. install certbot
-    google it
+# Installation
+## 1. Create a Docker volume to hold SSL certificates:
+docker volume create letsencrypt_certificates
 
-
-2. docker volume create letsencrypt_certificates
-
-3. get certificates (as follows)
+## 2. Get your SSL certificates through Certbot (note: Certbot has rate limits, so be careful.)
 docker run --rm \
     -p 80:80 \
     -p 443:443 \
@@ -48,7 +41,10 @@ docker run --rm \
     -e "LETSENCRYPT_DOMAIN2=www.keycloak.syntelli.com" \
     blacklabelops/letsencrypt install
 
-4. symbolically link the certificates so that Keycloak can find them:
+## 3. Massage the Docker volume so that Keycloak understands it.
+> The Keycloak image expects two files (tls.crt and tls.key)
+> Letsyncrypt provides a bunch of symlinks owned by root.
+> We also need to ensure the "jboss" user (id 1000) will have access to the files.
 sudo su -
 cd /var/lib/docker/volumes/letsencrypt_certificates/_data
 chown 1000:root archive
