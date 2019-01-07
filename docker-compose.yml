@@ -45,7 +45,7 @@ services:
 #      build:
 #        context: .
 #        dockerfile: Dockerfile-keycloak
-      container_name: keycloak_server
+      container_name: keycloak
       hostname: keycloak
       restart: unless-stopped
       environment:
