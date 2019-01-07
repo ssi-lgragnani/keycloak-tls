@@ -1,31 +1,31 @@
 version: "2"
 
 services:
-#  nginx:
-#      #image: blacklabelops/nginx
-#      build:
-#        context: .
-#        dockerfile: Dockerfile-nginx
-#      container_name: nginx_server
-#      ports:
-#        - '443:443'
-#        - '80:80'
-#      volumes:
-#        - ./volumes/nginx_volume:/home/nginx
-#        - /etc/letsencrypt:/etc/letsencrypt
-#        #- letsencrypt_challenges:/var/www/letsencrypt
-#      environment:
-#        - 'SERVER1SERVER_NAME=keycloak.syntelli.com'
-#        - 'SERVER1REVERSE_PROXY_LOCATION1=/'
-#        - 'SERVER1REVERSE_PROXY_PASS1=http://keycloak:8080/'
-#        - 'SERVER1HTTPS_ENABLED=true'
-#        - 'SERVER1HTTP_ENABLED=true'
-#        - 'SERVER1LETSENCRYPT_CERTIFICATES=true'
-#        - 'SERVER1CERTIFICATE_FILE=/etc/letsencrypt/live/keycloak.syntelli.com/fullchain.pem'
-#        - 'SERVER1CERTIFICATE_KEY=/etc/letsencrypt/live/keycloak.syntelli.com/privkey.pem'
-#        - 'SERVER1CERTIFICATE_TRUSTED=/etc/letsencrypt/live/keycloak.syntelli.com/fullchain.pem'
-#        - 'SERVER1PROXY_APPLICATION=keycloak'
-#      restart: unless-stopped
+  nginx:
+      #image: blacklabelops/nginx
+      build:
+        context: .
+        dockerfile: Dockerfile-nginx
+      container_name: nginx_server
+      ports:
+        - '443:443'
+        - '80:80'
+      volumes:
+        - ./volumes/nginx_volume:/home/nginx
+        - /etc/letsencrypt:/etc/letsencrypt
+        #- letsencrypt_challenges:/var/www/letsencrypt
+      environment:
+        - 'SERVER1SERVER_NAME=keycloak.syntelli.com'
+        - 'SERVER1REVERSE_PROXY_LOCATION1=/'
+        - 'SERVER1REVERSE_PROXY_PASS1=http://keycloak:8080/'
+        - 'SERVER1HTTPS_ENABLED=true'
+        - 'SERVER1HTTP_ENABLED=true'
+        - 'SERVER1LETSENCRYPT_CERTIFICATES=true'
+        - 'SERVER1CERTIFICATE_FILE=/etc/letsencrypt/live/keycloak.syntelli.com/fullchain.pem'
+        - 'SERVER1CERTIFICATE_KEY=/etc/letsencrypt/live/keycloak.syntelli.com/privkey.pem'
+        - 'SERVER1CERTIFICATE_TRUSTED=/etc/letsencrypt/live/keycloak.syntelli.com/fullchain.pem'
+        - 'SERVER1PROXY_APPLICATION=keycloak'
+      restart: unless-stopped
   postgres:
       image: postgres:latest
       container_name: postgres
@@ -60,11 +60,9 @@ services:
 #      links:
 #        - keycloak_postgres:postgres
       ports:
-        - "8080:8080"
+        - "18080:8080"
       volumes:
         - ./volumes/keycloak_volume:/data
-        - ./home/ubuntu/cognitive.syntelli.com:/etc/x509/https
-        -
       restart: unless-stopped
 
 volumes:

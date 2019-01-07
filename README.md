@@ -5,6 +5,32 @@ https://github.com/Codingpedia/codingmarks-api/wiki/Keycloak-Setup-for-Productio
 docker compose + nginx + keycloak + postgrse
 
 
+1. install docker
+
+2. docker volume create letsencrypt_certificates
+
+3. get certificates (as follows)
+docker run --rm \
+    -p 80:80 \
+    -p 443:443 \
+    --name letsencrypt \
+    -v letsencrypt_certificates:/etc/letsencrypt \
+    -e "LETSENCRYPT_EMAIL=admin@syntelli.com" \
+    -e "LETSENCRYPT_DOMAIN1=keycloak.syntelli.com" \
+    -e "LETSENCRYPT_DOMAIN2=www.keycloak.syntelli.com" \
+    blacklabelops/letsencrypt install
+
+4. symbolically link the certificates so that Keycloak can find them:
+sudo su -
+cd /var/lib/docker/volumes/letsencrypt_certificates/_data
+mkdir keycloak
+cd keycloak
+ln -s ../live/keycloak.syntelli.com/cert.pem tls.crt
+ln -s ../live/keycloak.syntelli.com/privkey.pem tls.key
+exit
+
+#########################
+
 [ references ]
 Nell Medina (for a blog post with incomplete instructions.)
 - https://nellmedina.github.io/install-keycloak-with-docker/
