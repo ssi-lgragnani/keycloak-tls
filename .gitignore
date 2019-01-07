@@ -2,6 +2,7 @@
 #!.gitkeep
 volumes/nginx_volume/*.pem
 volumes/keycloak_volume/*
+!volumes/keycloak_volume/standalone.xml
 volumes/keycloak_postgresql_volume/*
 volumes/letsencrypt_challenges/*
 volumes/letsencrypt_certificates/*
