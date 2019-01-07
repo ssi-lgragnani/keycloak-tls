@@ -20,7 +20,7 @@ services:
       container_name: keycloak
       hostname: keycloak
       environment:
-      - KEYCLOAK_USER=admin
+        - KEYCLOAK_USER=admin
         - KEYCLOAK_PASSWORD=admin
         - KEYCLOAK_HTTP_PORT=80
         - KEYCLOAK_HTTPS_PORT=443
