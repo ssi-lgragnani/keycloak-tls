@@ -63,8 +63,8 @@ services:
         - "8080:8080"
       volumes:
         - ./volumes/keycloak_volume:/data
-        - ./home/ubuntu/cognitive.syntelli.com:/etc/x509/https
-        -
+        #- ./home/ubuntu/cognitive.syntelli.com:/etc/x509/https
+        - letsencrypt_certificates/keycloak:/etc/x509/https
       restart: unless-stopped
 
 volumes:
@@ -74,8 +74,8 @@ volumes:
 #    external: true
   keycloak_postgresql_volume:
     external: true
-#  letsencrypt_certificates:
-#    external: true
+  letsencrypt_certificates:
+    external: true
 #  letsencrypt_challenges:
 #    external: true
 
