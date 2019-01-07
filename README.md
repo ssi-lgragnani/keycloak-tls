@@ -38,16 +38,19 @@ The following must be installed.
 - docker-compose (https://docs.docker.com/compose/install/)
 
 # Installation
-## Set up SSL
-First we need to create a Docker volume. This will act as shared storage between our Docker containers.
+## Create Docker volumes
+The Keycloak database runs as a Service through Docker Compose. All local data is deleted when a Service is stopped. In order to persist data past the Service lifecycle, we need to store the database files in an external location using a Docker Volume:
 ```
-docker volume create letsencrypt_certificates
 docker volume create keycloak_postgresql_volume
 ```
 
-Next we'll use Docker to geenrate our SSL certificates.
-In the following code, replace "keycloak.syntelli.com" with the DNS Alias you configured earlier.
-(Special thanks to Steffen Bleul and the 'blacklabelops' project for making this easy.)
+For the same reason, we create another volume to hold our SSL certificates. Using a Docker Volume allows multiple Services to share access to the same directory resources:
+```
+docker volume create letsencrypt_certificates
+```
+
+## Generate SSL certificates
+Note: replace "keycloak.syntelli.com" with your actual domain name.
 ```
 docker run --rm \
     -p 80:80 \
@@ -60,7 +63,10 @@ docker run --rm \
     blacklabelops/letsencrypt install
 ```
 
-The next step is to wire Let's Encrypt into Keycloak.
+(Special thanks to Steffen Bleul and the 'blacklabelops' project for making this easy.)
+
+## Comply with Keycloak's hard-coded assumptions 
+Note: replace "keycloak.syntelli.com" with your actual domain name.
 ```
 sudo su -
 cd /var/lib/docker/volumes/letsencrypt_certificates/_data
@@ -72,7 +78,7 @@ chown 1000:root tls.crt
 chown 1000:root tls.key
 ```
 
-> If you're curious what that just did:
+The above step is where I got stuck. Here's an explanation why it's needed:
 ```
 Let's Encrypt provided us with free SSL certificates, which go into our Docker volume.
 
@@ -96,7 +102,9 @@ That's it--this is everything needed to import the external CA certificate into 
 (special thanks to: https://developer.jboss.org/thread/278360?_sscc=t for the ultimate answer.)
 ```
 
-## Change the usernames and passwords:
+## BEFORE RUNNING DOCKER-COMPOSE (set up the initial username/passwords.)
+Note: these instructions assume the Docker Volume "keycloak_postgresql_volume" is still empty.
+
 The keycloak admin console defaults to "admin/admin".
 
 The postgres database user defaults to "keycloak/keycloak".
@@ -135,8 +143,6 @@ Run the following to view logs:
 ```docker-compose logs keycloak```
 
 Note that the Keycloak container takes about 30-40 seconds to spin up.
-
-
 
 ### References
 
