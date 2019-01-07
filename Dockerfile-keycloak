@@ -1,3 +1,3 @@
 FROM jboss/keycloak
 #ADD volumes/keycloak_volume/standalone.xml /opt/jboss/keycloak/standalone/configuration/standalone.xml
-ADD volumes/letsencrypt_certificates/keycloak.syntelli.com/
+#ADD volumes/letsencrypt_certificates/keycloak.syntelli.com/

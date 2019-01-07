@@ -23,9 +23,24 @@ docker run --rm \
 4. symbolically link the certificates so that Keycloak can find them:
 sudo su -
 cd /var/lib/docker/volumes/letsencrypt_certificates/_data
+chown 1000:root archive
+chown 1000:root live
 ln -s live/keycloak.syntelli.com/cert.pem tls.crt
 ln -s live/keycloak.syntelli.com/privkey.pem tls.key
+chown 1000:root tls.crt
+chown 1000:root tls.key
+
+openssl pkcs12 -export -name server-cert -in tls.crt -inkey tls.key -out serverkeystore.p12
+# (press enter twice to leave password blank)
+chown ubuntu:root serverkeystore.p12
 exit
+
+
+#########################
+setup the keystore
+docker-compose exec keycloak bash
+cd /etc/x509/https
+keytool -importkeystore -destkeystore ~/keycloak.jks -srckeystore serverkeystore.p12 -srcstoretype pkcs12 -alias server-cert
 
 #########################
 
