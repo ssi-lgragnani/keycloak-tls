@@ -64,7 +64,7 @@ services:
       volumes:
         - ./volumes/keycloak_volume:/data
         #- ./home/ubuntu/cognitive.syntelli.com:/etc/x509/https
-        - letsencrypt_certificates/keycloak:/etc/x509/https
+        - letsencrypt_certificates:/etc/x509/https
       restart: unless-stopped
 
 volumes:

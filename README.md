@@ -23,10 +23,8 @@ docker run --rm \
 4. symbolically link the certificates so that Keycloak can find them:
 sudo su -
 cd /var/lib/docker/volumes/letsencrypt_certificates/_data
-mkdir keycloak
-cd keycloak
-ln -s ../live/keycloak.syntelli.com/cert.pem tls.crt
-ln -s ../live/keycloak.syntelli.com/privkey.pem tls.key
+ln -s live/keycloak.syntelli.com/cert.pem tls.crt
+ln -s live/keycloak.syntelli.com/privkey.pem tls.key
 exit
 
 #########################
