@@ -12,8 +12,6 @@ docker compose + nginx + keycloak + postgres
 
 # System Requirements
 ## 1. The following ports must be exposed:
-- 80
-- 443
 - 8080
 - 8443
 
@@ -27,10 +25,14 @@ docker compose + nginx + keycloak + postgres
 - certbot
 
 # Installation
-## 1. Create a Docker volume to hold SSL certificates:
-docker volume create letsencrypt_certificates
+## Set up SSL
+First we need to create a Docker volume. This will act as shared storage between our Docker containers.
+```docker volume create letsencrypt_certificates```
 
-## 2. Get your SSL certificates through Certbot (note: Certbot has rate limits, so be careful.)
+Next we'll use Docker to geenrate our SSL certificates.
+In the following code, replace "keycloak.syntelli.com" with the DNS Alias you configured earlier.
+(Special thanks to Steffen Bleul and the 'blacklabelops' project for making this easy.)
+```
 docker run --rm \
     -p 80:80 \
     -p 443:443 \
@@ -40,8 +42,28 @@ docker run --rm \
     -e "LETSENCRYPT_DOMAIN1=keycloak.syntelli.com" \
     -e "LETSENCRYPT_DOMAIN2=www.keycloak.syntelli.com" \
     blacklabelops/letsencrypt install
+```
 
-## 3. Massage the Docker volume so that Keycloak understands it.
+The next step is to wire Let's Encrypt into Keycloak.
+```
+sudo su -
+cd /var/lib/docker/volumes/letsencrypt_certificates/_data
+chown 1000:root archive
+chown 1000:root live
+ln -s live/keycloak.syntelli.com/cert.pem tls.crt
+ln -s live/keycloak.syntelli.com/privkey.pem tls.key
+chown 1000:root tls.crt
+chown 1000:root tls.key
+```
+
+> If you're curious what that just did:
+> Unfortunately, Keycloak likes to self-sign certificates (which are fairly worthless as far as TLS goes.)
+> Fortunately, the Keycloak Docker image can use certificates signed by external CA's (like Let's Encrypt.)
+> Unforunately, Keycloak hard-codes the expected filenames (they must be "tls.crt" and "tls.key") and these files aren't provided automagically by Let's Encrypt or the Black Label Ops docker image.
+> Fortunately, we can create our own symbolic links (and change the user permissions) because our Docker volume is just a directory living on the Docker host's filesystem.
+
+
+
 > The Keycloak image expects two files (tls.crt and tls.key)
 > Letsyncrypt provides a bunch of symlinks owned by root.
 > We also need to ensure the "jboss" user (id 1000) will have access to the files.
