@@ -8,7 +8,7 @@ services:
         - '443:443'
         - '80:80'
       volumes:
-        - nginx_volume:/home/nginx
+        - volumes/nginx_volume:/home/nginx
         - /etc/letsencrypt:/etc/letsencrypt
         #- letsencrypt_challenges:/var/www/letsencrypt
       environment:
@@ -60,8 +60,8 @@ services:
       restart: unless-stopped
 
 volumes:
-  nginx_volume:
-    external: true
+#  nginx_volume:
+#    external: true
   keycloak_volume:
     external: true
   keycloak_postgresql_volume:
