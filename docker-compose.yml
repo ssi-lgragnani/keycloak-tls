@@ -18,9 +18,9 @@ services:
         - 'SERVER1HTTPS_ENABLED=true'
         - 'SERVER1HTTP_ENABLED=true'
         - 'SERVER1LETSENCRYPT_CERTIFICATES=true'
-        - 'SERVER1CERTIFICATE_FILE=/etc/letsencrypt/live/mario.nellmedina.com/fullchain.pem'
-        - 'SERVER1CERTIFICATE_KEY=/etc/letsencrypt/live/mario.nellmedina.com/privkey.pem'
-        - 'SERVER1CERTIFICATE_TRUSTED=/etc/letsencrypt/live/mario.nellmedina.com/fullchain.pem'
+        - 'SERVER1CERTIFICATE_FILE=/etc/letsencrypt/live/keycloak.syntelli.com/fullchain.pem'
+        - 'SERVER1CERTIFICATE_KEY=/etc/letsencrypt/live/keycloak.syntelli.com/privkey.pem'
+        - 'SERVER1CERTIFICATE_TRUSTED=/etc/letsencrypt/live/keycloak.syntelli.com/fullchain.pem'
         - 'SERVER1PROXY_APPLICATION=keycloak'
       restart: unless-stopped
   keycloak_postgres:
